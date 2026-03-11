@@ -1,5 +1,3 @@
-# Canvas_ETL
-
 # Canvas LMS to PostgreSQL: Student Analytics ETL
 
 Este proyecto implementa un pipeline ETL automatizado utilizando **Apache Airflow** y **Python**. Extrae métricas de interacción de estudiantes desde la API REST de Canvas LMS, realiza limpieza y transformaciones con **Pandas**, y carga los datos en un esquema analítico en **PostgreSQL**.
