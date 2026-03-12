@@ -34,6 +34,13 @@ A continuación, puedes explorar cada una de las soluciones implementadas hacien
 * Aplica la técnica de *Long Polling* usando `boto3` para escuchar eventos en vivo disparados por Canvas hacia una cola de **Amazon SQS**.
 * Ingiere los payloads crudos en formato JSON de forma resiliente hacia **MongoDB**, aplicando el principio de *Schema-on-Read*.
 
+### 5. 🔄 [Users Enrollments](https://github.com/gscelly/Canvas_ETL/tree/main/Users%20Enrollments)
+**Sincronización Masiva de Enrolamientos (Airflow + MongoDB)**
+* Pipeline ETL de alto rendimiento diseñado para extraer todos los usuarios de una subcuenta y sus respectivos enrolamientos históricos y activos.
+* Resuelve el problema de la **paginación profunda (Deep Pagination)** nativa de Canvas API.
+* Optimiza la memoria y la latencia de red combinando extracciones concurrentes (`ThreadPoolExecutor`) con inserciones en lotes (`insert_many`) en **MongoDB**.
+* Programación *timezone-aware* estricta utilizando la librería `pendulum`.
+
 ---
 
 ## 🛠️ Stack Tecnológico Global
