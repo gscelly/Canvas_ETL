@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5">Sistema de Consultas Canvas</h1>
+    <p class="text-muted">Selecciona el tipo de búsqueda</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-primary h-100">
+            <div class="card-header bg-primary text-white text-center">
+                <h3><i class="bi bi-backpack"></i> Buscar Estudiante</h3>
+            </div>
+            <div class="card-body">
+                <p>Busca cursos y calificaciones de un alumno.</p>
+                <form method="POST" action="/search">
+                    <input type="hidden" name="role_intent" value="student">
+                    <div class="input-group mb-3">
+                        <input type="text" name="search_term" class="form-control" placeholder="Nombre, ID o Correo" required>
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-dark h-100">
+            <div class="card-header bg-dark text-white text-center">
+                <h3><i class="bi bi-person-video3"></i> Buscar Docente</h3>
+            </div>
+            <div class="card-body">
+                <p>Busca cursos asignados y listados de alumnos.</p>
+                <form method="POST" action="/search">
+                    <input type="hidden" name="role_intent" value="teacher">
+                    <div class="input-group mb-3">
+                        <input type="text" name="search_term" class="form-control" placeholder="Nombre, ID o Correo" required>
+                        <button class="btn btn-dark" type="submit">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

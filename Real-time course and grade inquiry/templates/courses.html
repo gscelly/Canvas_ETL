@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="btn btn-secondary">&larr; Volver al buscador</a>
+</div>
+
+<div class="text-center mb-5">
+    <h2>Perfil Académico: <strong>{{ user.name }}</strong></h2>
+    <span class="badge bg-info text-dark">Periodo ID: {{ term_id }}</span>
+</div>
+
+{% if teacher_courses %}
+<div class="card mb-5 border-dark">
+    <div class="card-header bg-dark text-white">
+        <h4 class="mb-0"><i class="bi bi-briefcase-fill"></i> Cursos como DOCENTE</h4>
+    </div>
+    <div class="card-body bg-light">
+        <div class="row">
+            {% for course in teacher_courses %}
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 shadow-sm border-dark">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">{{ course.name }}</h5>
+                        <h6 class="text-muted">{{ course.course_code }}</h6>
+                        <hr>
+                        <p class="card-text small">
+                            <strong>Paralelo:</strong>
+                            {% for s in course.sections %}{{ s.name }} {% endfor %}
+                        </p>
+                        <div class="d-grid">
+                            <a href="{{ url_for('teacher_course_grades', course_id=course.id) }}" class="btn btn-dark">
+                                Ver Listado de Estudiantes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card border-primary">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-book-fill"></i> Cursos como ESTUDIANTE</h4>
+    </div>
+    <div class="card-body">
+        {% if student_courses %}
+        <div class="row">
+            {% for course in student_courses %}
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ course.name }}</h5>
+                        <h6 class="text-muted">{{ course.course_code }}</h6>
+                        <hr>
+                        <p class="card-text small">
+                            <strong>Docente:</strong>
+                            {% for t in course.teachers %}{{ t.display_name }} {% endfor %}
+                        </p>
+                        <div class="d-grid">
+                            <a href="{{ url_for('course_grades', user_id=user.id, course_id=course.id) }}" class="btn btn-outline-primary">
+                                Ver Mis Calificaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Este usuario no tiene cursos como estudiante en el periodo seleccionado.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

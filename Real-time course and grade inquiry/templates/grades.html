@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{{ url_for('user_courses', user_id=user_id, role='student') }}" class="btn btn-secondary">&larr; Volver</a>
+    <h4 class="mb-0">Mis Notas: {{ course.name }}</h4>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0" style="font-size: 0.9rem;">
+                <thead class="table-light">
+                    <tr class="text-center align-middle">
+                        <th style="width: 25%;">Actividad</th>
+                        <th>Estado / Nota</th>
+                        <th>Fechas Actividad</th>
+                        <th>Detalles Entrega</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sub in submissions %}
+                    <tr>
+                        <td>
+                            <strong>{{ sub.assignment.name }}</strong>
+                            <br>
+
+                            {% set gid = sub.assignment.assignment_group_id %}
+                            <span class="badge bg-secondary text-light fw-normal mt-1" style="font-size: 0.75rem;">
+                                {{ group_map.get(gid, 'Actividad') }}
+                            </span>
+                            <br>
+
+                            <small class="text-muted">ID: {{ sub.assignment_id }}</small>
+                        </td>
+
+                        <td class="text-center align-middle">
+                            <h5 class="mb-1">
+                                {% if sub.score is not none %}
+                                    {{ sub.score }} <span class="text-muted fw-normal" style="font-size:0.8em">/ {{ sub.assignment.points_possible }}</span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </h5>
+                            <div>
+                                {% if sub.late %} <span class="badge bg-warning text-dark">Atrasado</span> {% endif %}
+                                {% if sub.missing %} <span class="badge bg-danger">Faltante</span> {% endif %}
+                                {% if sub.excused %} <span class="badge bg-info">Exonerado</span> {% endif %}
+                                {% if sub.workflow_state == 'graded' %}
+                                    <span class="badge bg-success">Calificado</span>
+                                {% elif sub.workflow_state == 'submitted' %}
+                                    <span class="badge bg-primary">Enviado</span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <td>
+                            <ul class="list-unstyled mb-0 small">
+                                <li><strong>Vence:</strong> {{ sub.assignment.due_at | datetimeformat }}</li>
+                                <li><strong>Desde:</strong> {{ sub.assignment.unlock_at | datetimeformat }}</li>
+                                <li><strong>Hasta:</strong> {{ sub.assignment.lock_at | datetimeformat }}</li>
+                            </ul>
+                        </td>
+
+                        <td>
+                            <ul class="list-unstyled mb-0 small">
+                                <li>
+                                    <strong>Enviado:</strong>
+                                    {% if sub.submitted_at %}
+                                        <span class="text-primary">{{ sub.submitted_at | datetimeformat }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    <strong>Calificado:</strong>
+                                    {% if sub.graded_at %}
+                                        {{ sub.graded_at | datetimeformat }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+
+                            {% if sub.submission_comments %}
+                                <hr class="my-1 border-secondary">
+                                <div class="small mt-2">
+                                    <strong class="text-dark"><i class="bi bi-chat-quote"></i> Feedback:</strong>
+                                    <ul class="list-unstyled mt-1 mb-0 bg-light p-2 rounded border">
+                                        {% for comment in sub.submission_comments %}
+                                        <li class="mb-2 border-bottom pb-1" style="border-bottom: 1px dashed #ccc !important;">
+                                            <i class="text-dark">"{{ comment.comment }}"</i>
+                                            <br>
+                                            <span style="font-size: 0.75rem;" class="text-muted">
+                                                &mdash; {{ comment.author_name }} ({{ comment.created_at | datetimeformat }})
+                                            </span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center p-4">No hay actividades registradas en este curso.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
