@@ -27,6 +27,41 @@ This project implements a Serverless ETL architecture designed for scalability, 
 * `/docs`: Architecture diagrams and workflow documentation.
 * `/querys/athena_queries.sql`: Sample analytical queries for LMS auditing.
 
+graph LR
+    subgraph "Fuente de Datos"
+        Canvas[("🏫 Canvas LMS\n(REST API)")]
+    end
+
+    subgraph "AWS Serverless Data Lake"
+        Python["🐍 Python Job\n(Extracción Pagina)"]
+        S3Raw[("🪣 Amazon S3\n(Capa Raw - JSON)")]
+        Glue["⚙️ AWS Glue\n(PySpark Transform)"]
+        S3Proc[("🪣 Amazon S3\n(Capa Processed - Parquet)")]
+        Athena["🔍 Amazon Athena\n(Consultas SQL)"]
+        
+        Canvas -- "API GET" --> Python
+        Python -- "Upload" --> S3Raw
+        S3Raw -- "Read" --> Glue
+        Glue -- "Write (Partitioned)" --> S3Proc
+        S3Proc -- "Federated Query" --> Athena
+    end
+    
+    subgraph "Consumo Analítico"
+        BI["📊 BI Dashboards\n(PowerBI / Tableau)"]
+        AdHoc["🧑‍💻 Data Engineers\n(Auditoría)"]
+        
+        Athena --> BI
+        Athena --> AdHoc
+    end
+
+    %% Estilos de los nodos para darles color corporativo
+    style Canvas fill:#e36209,stroke:#fff,stroke-width:2px,color:#fff
+    style Python fill:#306998,stroke:#fff,stroke-width:2px,color:#fff
+    style S3Raw fill:#569a31,stroke:#fff,stroke-width:2px,color:#fff
+    style Glue fill:#8c4fff,stroke:#fff,stroke-width:2px,color:#fff
+    style S3Proc fill:#569a31,stroke:#fff,stroke-width:2px,color:#fff
+    style Athena fill:#ff9900,stroke:#fff,stroke-width:2px,color:#fff
+
 ## 🔐 Security & Best Practices Implemented
 
 * **Secret Management:** API tokens and sensitive keys are handled via environment variables (designed for AWS Secrets Manager integration in production).
