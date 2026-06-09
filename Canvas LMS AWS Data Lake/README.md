@@ -27,17 +27,18 @@ This project implements a Serverless ETL architecture designed for scalability, 
 * `/docs`: Architecture diagrams and workflow documentation.
 * `/querys/athena_queries.sql`: Sample analytical queries for LMS auditing.
 
+```mermaid
 graph LR
-    subgraph "Fuente de Datos"
+    subgraph "Data Source"
         Canvas[("🏫 Canvas LMS\n(REST API)")]
     end
 
     subgraph "AWS Serverless Data Lake"
-        Python["🐍 Python Job\n(Extracción Pagina)"]
-        S3Raw[("🪣 Amazon S3\n(Capa Raw - JSON)")]
+        Python["🐍 Python Job\n(Paginated Extraction)"]
+        S3Raw[("🪣 Amazon S3\n(Raw Zone - JSON)")]
         Glue["⚙️ AWS Glue\n(PySpark Transform)"]
-        S3Proc[("🪣 Amazon S3\n(Capa Processed - Parquet)")]
-        Athena["🔍 Amazon Athena\n(Consultas SQL)"]
+        S3Proc[("🪣 Amazon S3\n(Processed Zone - Parquet)")]
+        Athena["🔍 Amazon Athena\n(SQL Queries)"]
         
         Canvas -- "API GET" --> Python
         Python -- "Upload" --> S3Raw
@@ -46,15 +47,15 @@ graph LR
         S3Proc -- "Federated Query" --> Athena
     end
     
-    subgraph "Consumo Analítico"
+    subgraph "Analytics Consumption"
         BI["📊 BI Dashboards\n(PowerBI / Tableau)"]
-        AdHoc["🧑‍💻 Data Engineers\n(Auditoría)"]
+        AdHoc["🧑‍💻 Data Engineers\n(Auditing)"]
         
         Athena --> BI
         Athena --> AdHoc
     end
 
-    %% Estilos de los nodos para darles color corporativo
+    %% Node styling for corporate visual identity
     style Canvas fill:#e36209,stroke:#fff,stroke-width:2px,color:#fff
     style Python fill:#306998,stroke:#fff,stroke-width:2px,color:#fff
     style S3Raw fill:#569a31,stroke:#fff,stroke-width:2px,color:#fff
