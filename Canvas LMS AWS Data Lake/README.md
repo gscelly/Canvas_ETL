@@ -27,7 +27,7 @@ This project implements a Serverless ETL architecture designed for scalability, 
 * `/docs`: Architecture diagrams and workflow documentation.
 * `/querys/athena_queries.sql`: Sample analytical queries for LMS auditing.
 
-```mermaid
+````mermaid
 graph LR
     subgraph "Data Source"
         Canvas[("🏫 Canvas LMS\n(REST API)")]
@@ -39,18 +39,18 @@ graph LR
         Glue["⚙️ AWS Glue\n(PySpark Transform)"]
         S3Proc[("🪣 Amazon S3\n(Processed Zone - Parquet)")]
         Athena["🔍 Amazon Athena\n(SQL Queries)"]
-        
+
         Canvas -- "API GET" --> Python
         Python -- "Upload" --> S3Raw
         S3Raw -- "Read" --> Glue
         Glue -- "Write (Partitioned)" --> S3Proc
         S3Proc -- "Federated Query" --> Athena
     end
-    
+
     subgraph "Analytics Consumption"
         BI["📊 BI Dashboards\n(PowerBI / Tableau)"]
         AdHoc["🧑‍💻 Data Engineers\n(Auditing)"]
-        
+
         Athena --> BI
         Athena --> AdHoc
     end
@@ -62,9 +62,12 @@ graph LR
     style Glue fill:#8c4fff,stroke:#fff,stroke-width:2px,color:#fff
     style S3Proc fill:#569a31,stroke:#fff,stroke-width:2px,color:#fff
     style Athena fill:#ff9900,stroke:#fff,stroke-width:2px,color:#fff
+````
 
 ## 🔐 Security & Best Practices Implemented
 
 * **Secret Management:** API tokens and sensitive keys are handled via environment variables (designed for AWS Secrets Manager integration in production).
 * **Columnar Storage:** Usage of Apache Parquet reduces S3 storage costs and Athena query scanning times by up to 90%.
 * **Smart Partitioning:** Data is hierarchically partitioned, preventing full-table scans during analytics.
+````
+````
